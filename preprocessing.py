@@ -205,7 +205,6 @@ def createLabels():
 
     return labels
 
-        #todo repeat for the rest of the datapoints
 
 def mergedDataExists():
     return os.path.isdir('dataset/mergedData/')
@@ -247,4 +246,7 @@ __main__()
 
 
 #todo: data formatting and labelling
+#todo: pad data to largest file
+#todo: format data into list corresponding to labels list
+
 
