@@ -2,7 +2,8 @@ import matplotlib as mpl
 import numpy as np
 import os
 import shutil
-
+import librosa
+from pydub import AudioSegment as seg
 def renameFiles():
     fileNum = 0
     for file in os.listdir('dataset/Crema/'):
@@ -199,6 +200,9 @@ def createLabels():
             labels.append(6)
         if 'SUP' in file:
             labels.append(7)
+
+
+
     return labels
 
         #todo repeat for the rest of the datapoints
@@ -209,6 +213,25 @@ def mergedDataExists():
 
 def createNP_arrLabels(labels):
     return np.asarray(labels)
+
+
+def getMaxLengthFile():
+    path = 'dataset/mergedData/'
+    sizeList = []
+    for file in os.listdir(path):
+        tempPath = path+file
+        sizeList.append(librosa.get_duration(filename=tempPath)
+)
+    return max(sizeList)
+
+
+def padFile(largestSize):
+    path = 'dataset/mergedData/'
+    for file in os.listdir(path):
+        tempPath = path+file
+        fileLen = librosa.get_duration(filename=tempPath)
+        padding_length = largestSize-fileLen
+
 def __main__():
     if not (mergedDataExists()):
         renameFiles()
@@ -217,6 +240,8 @@ def __main__():
     labels = createLabels()
     labels = createNP_arrLabels(labels=labels)
     np.save('labels.npy', labels)
+    largestFileSize = getMaxLengthFile()
+    padFile(largestFileSize)
 
 __main__()
 
