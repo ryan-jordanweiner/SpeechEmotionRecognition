@@ -175,13 +175,8 @@ def moveAllFilesTO_mergedData():
 def removeDir(path):
     try:
         shutil.rmtree(path)
-    except FileNotFoundError:import matplotlib as mpl
-
-def __main__():
-    renameFiles()
-    createFinalDataDir()
-    createFinalDataDir()
-    moveAllFilesTO_mergedData()
+    except FileNotFoundError:
+        print('Path \"{}\" not found'.format(path))
 
 
 def createLabels():
@@ -190,12 +185,41 @@ def createLabels():
     for file in os.listdir(path):
         if 'ANG' in file:
             labels.append(0)
+        if 'CAL' in file:
+            labels.append(1)
+        if 'DIS' in file:
+            labels.append(2)
+        if 'FEA' in file:
+            labels.append(3)
+        if 'HAP' in file:
+            labels.append(4)
+        if 'NEU' in file:
+            labels.append(5)
+        if 'SAD' in file:
+            labels.append(6)
+        if 'SUP' in file:
+            labels.append(7)
+    return labels
+
         #todo repeat for the rest of the datapoints
 
+def mergedDataExists():
+    return os.path.isdir('dataset/mergedData/')
+
+
+def createNP_arrLabels(labels):
+    return np.asarray(labels)
+def __main__():
+    if not (mergedDataExists()):
+        renameFiles()
+        createFinalDataDir()
+        moveAllFilesTO_mergedData()
+    labels = createLabels()
+    labels = createNP_arrLabels(labels=labels)
+    np.save('labels.npy', labels)
 
 __main__()
 
 
 #todo: data formatting and labelling
-#todo: save data in list with corespodingin labels
-#ryan signing off for tonight MFs lol
+
