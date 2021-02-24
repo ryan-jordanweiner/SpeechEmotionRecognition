@@ -184,6 +184,14 @@ def __main__():
     moveAllFilesTO_mergedData()
 
 
+def createLabels():
+    labels = []
+    path = 'dataset/mergedData/'
+    for file in os.listdir(path):
+        if 'ANG' in file:
+            labels.append(0)
+        #todo repeat for the rest of the datapoints
+
 
 __main__()
 
@@ -191,4 +199,3 @@ __main__()
 #todo: data formatting and labelling
 #todo: save data in list with corespodingin labels
 #ryan signing off for tonight MFs lol
-
