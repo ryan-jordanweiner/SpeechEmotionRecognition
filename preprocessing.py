@@ -214,22 +214,20 @@ def createNP_arrLabels(labels):
     return np.asarray(labels)
 
 
-def getMaxLengthFile():
-    path = 'dataset/mergedData/'
-    sizeList = []
-    for file in os.listdir(path):
-        tempPath = path+file
-        sizeList.append(librosa.get_duration(filename=tempPath)
-)
-    return max(sizeList)
 
-
-def padFile(largestSize):
+def createNpDataArr():
     path = 'dataset/mergedData/'
+    Y_data = []
     for file in os.listdir(path):
-        tempPath = path+file
-        fileLen = librosa.get_duration(filename=tempPath)
-        padding_length = largestSize-fileLen
+        y, sr = librosa.load(path+file)
+        Y_data.append(y)
+    return Y_data
+
+def toNpArray(data):
+    return np.array(data)
+
+def saveNpArray(arr, path):
+    np.save(path, arr)
 
 def __main__():
     if not (mergedDataExists()):
@@ -238,11 +236,255 @@ def __main__():
         moveAllFilesTO_mergedData()
     labels = createLabels()
     labels = createNP_arrLabels(labels=labels)
-    np.save('labels.npy', labels)
-    largestFileSize = getMaxLengthFile()
-    padFile(largestFileSize)
+    saveNpArray(labels, 'labels.npy')
+    data = createNpDataArr()
+    print('here')
+    
+    #!works fine until here
+    #!need to pad data to the same length before creating it as a numpy array
+    
+    data = toNpArray(data)
+    print('herehere')
+    saveNpArray(data, 'data.npy')
+
+
+
 
 __main__()
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@ryan-jordanweiner
+ryan-jordanweiner /
+SpeechEmotionRecognition
+
+1
+0
+
+    0
+
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+
+    Settings
+
+SpeechEmotionRecognition/
+in
+main
+1
+
+import matplotlib as mpl
+
+2
+
+import numpy as np
+
+3
+
+import os
+
+4
+
+import shutil
+
+5
+
+import librosa
+
+6
+
+from pydub import AudioSegment as seg
+
+7
+
+def renameFiles():
+
+8
+
+    fileNum = 0
+
+9
+
+    for file in os.listdir('dataset/Crema/'):
+
+10
+
+        newName = ''
+
+11
+
+        try:
+
+12
+
+            if 'ANG' in file:
+
+13
+
+                newName = 'dataset/Crema/ANG{}.wav'.format(fileNum)
+
+14
+
+                os.rename('dataset/Crema/'+file, newName)
+
+15
+
+            if 'HAP' in file:
+
+16
+
+                newName = 'dataset/Crema/HAP{}.wav'.format(fileNum)
+
+17
+
+                os.rename('dataset/Crema/'+file, newName)
+
+18
+
+            if 'FEA' in file:
+
+19
+
+                newName = 'dataset/Crema/FEA{}.wav'.format(fileNum)
+
+20
+
+                os.rename('dataset/Crema/'+file, newName)
+
+21
+
+            if 'SAD' in file:
+
+22
+
+                newName = 'dataset/Crema/SAD{}.wav'.format(fileNum)
+
+23
+
+                os.rename('dataset/Crema/'+file, newName)
+
+24
+
+            if 'DIS' in file:
+
+25
+
+                newName = 'dataset/Crema/DIS{}.wav'.format(fileNum)
+
+26
+
+                os.rename('dataset/Crema/'+file, newName)
+
+27
+
+            if 'NEU' in file:
+
+28
+
+                newName = 'dataset/Crema/NEU{}.wav'.format(fileNum)
+
+29
+
+                os.rename('dataset/Crema/'+file, newName)
+
+30
+
+        except FileNotFoundError:
+
+31
+
+            pass
+
+32
+
+        fileNum+=1
+
+33
+
+    for actor in os.listdir('dataset/Ravdess/audio_speech_actors_01-24/'):
+
+34
+
+        for file in os.listdir('dataset/Ravdess/audio_speech_actors_01-24/{}'.format(actor)):
+
+35
+
+            newName = ''
+
+36
+
+            try:
+
+37
+
+                if file.split('-')[2] == '01':
+
+38
+
+                    newName = 'dataset/Ravdess/audio_speech_actors_01-24/{}/NEU{}.wav'.format(actor, fileNum)
+
+39
+
+                    os.rename('dataset/Ravdess/audio_speech_actors_01-24/{}/{}'.format(actor, file), newName)
+
+40
+
+                if file.split('-')[2] == '02':
+
+41
+
+                    newName = 'dataset/Ravdess/audio_speech_actors_01-24/{}/CAL{}.wav'.format(actor, fileNum)
+
+42
+
+                    os.rename('dataset/Ravdess/audio_speech_actors_01-24/{}/{}'.format(actor, file), newName)
+
+43
+
+                if file.split('-')[2] == '03':
+
+44
+
+                    newName = 'dataset/Ravdess/audio_speech_actors_01-24/{}/HAP{}.wav'.format(actor, fileNum)
+
+45
+
+                    os.rename('dataset/Ravdess/audio_speech_actors_01-24/{}/{}'.format(actor, file), newName)
+
+46
+
+                if file.split('-')[2] == '04':
+
+@ryan-jordanweiner
+Commit changes
+Commit summary
+Optional extended description
+Commit directly to the main branch.
+Create a new branch for this commit and start a pull request. Learn more about pull requests.
+
+    © 2021 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
+
 
 
 #todo: data formatting and labelling
